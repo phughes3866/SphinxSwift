@@ -1,0 +1,188 @@
+[
+	    {
+        "id": "tools",
+        "children":
+        [
+	{
+		"id" : "SphinxSwiftToolsMenu",
+		"caption": "Sphinx Swift Tools",
+		"children":
+		[
+			{
+				"id" : "InsertFromObjectsInv",
+				"caption": "Insert Links From Current Project",
+				"children":
+				[
+				{
+					"caption" : "Insert Document Link",
+					"command" : "insert_loc_project_links", "args": {"invtype": "doc"},
+					"mnemonic" : "D"
+				},
+				{
+					"caption" : "Insert Label Link",
+					"command" : "insert_loc_project_links", "args": {"invtype": "label"},
+					"mnemonic" : "L"
+				},
+				{
+					"caption" : "Insert Glossary Term Link",
+					"command" : "insert_loc_project_links", "args": {"invtype": "term"},
+					"mnemonic" : "G"
+				}
+				]
+			},
+		{
+			"caption" : "Insert Cross Project Link",
+			"command" : "insert_cross_project_links", "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "C"
+		},
+		{
+			"caption" : "Insert Sphinx SuBstitution",
+			"command" : "insert_sphinx_substitution", "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "B"
+		},
+		{
+			"caption" : "Grab Clipboard Photo",
+			"command" : "grab_clipboard_photo", "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "G"
+		},
+		{
+			"caption" : "Insert Citation (from ref file)",
+			"command" : "cite_from_reference_file", "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "I"
+		},
+		{
+			"caption" : "Wrap Selection As :role: (dropdown)",
+			"command" : "wrap_selection_as_role",
+			"context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "S"
+		},
+		{
+			"caption" : "Wrap Selection As :role: (quick)",
+			"command" : "insert_snippet", "args": {"contents": ":$1:`$SELECTION`"},
+			"context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "W"
+		},
+		{
+			"caption" : "Convert Text to RST Reference Label",
+			"command" : "convert_text_to_ref_label", "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "R"
+		},
+		{
+			"caption" : "Insert DateTime",
+			"command" : "insert_datetime",
+			"mnemonic" : "D"
+		},
+		{
+			"caption" : "See HTML (from _build)",
+			"command" : "open_html_page", "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "H"
+		},
+		{
+			"caption" : "See HTML (from _testbuild)",
+			"command" : "open_html_page", "args":
+			{
+			"testbuild_not_live": "True"
+			}, "context":
+          [
+            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+          ],
+			"mnemonic" : "T"
+		}
+		]
+	}
+        ]
+    },
+    {
+        // "caption": "Preferences",
+        // "mnemonic": "n",
+        "id": "preferences",
+        "children":
+        [
+            {
+                // "caption": "Package Settings",
+                // "mnemonic": "P",
+                "id": "package-settings",
+                "children":
+                [
+                    {
+                        "id": "sphinx-swift",
+                        "caption": "Sphinx Swift",
+                        "children":
+                        [
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/sphinx-swift/sphinx-swift.sublime-settings"
+                                },
+                                "caption": "Settings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/sphinx-swift.sublime-settings"
+                                },
+                                "caption": "Settings – User"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/sphinx-swift/Default (OSX).sublime-keymap",
+                                    "platform": "OSX"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/sphinx-swift/Default (Linux).sublime-keymap",
+                                    "platform": "Linux"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {
+                                    "file": "${packages}/sphinx-swift/Default (Windows).sublime-keymap",
+                                    "platform": "Windows"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/sphinx-swift.sublime-keymap"
+                                },
+                                "caption": "Key Bindings – User"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

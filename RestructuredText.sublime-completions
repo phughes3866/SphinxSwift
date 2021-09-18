@@ -1,0 +1,101 @@
+{
+	"scope": "text.restructuredtext - source - meta.tag, punctuation.definition.tag.begin",
+
+	"completions":
+	[
+		// PH replaced h1 and h2 with snippets that simultaneously insert a reference to the title
+  //       { "trigger": "h1", "contents" : "${1/./*/g}\n${1}\n${1/./*/g}" },
+  //       { "trigger": "title, h2", "contents" : "${1}\n${1/./=/g}" },
+        { "trigger": "h3", "contents" : "${1}\n${1/./-/g}" },
+        { "trigger": "h4", "contents" : "${1}\n${1/./^/g}" },
+        { "trigger": "h5", "contents" : "${1}\n${1/./\"/g}" },
+        { "trigger": "h6", "contents" : "${1}\n${1/./+/g}" },
+        { "trigger": "h7", "contents" : "${1}\n${1/./~/g}" },
+        { "trigger": "h8", "contents" : "${1}\n${1/./#/g}" },
+        // { "trigger": "h9", "contents" : ".. _${1/([[:upper:]])|([[:space:]])|([[:punct:]])/(?1:(up$1))(?2:_)(?3:)/g}:\n\n${1/./*/g}\n${1}\n${1/./*/g}" },
+// ${1/([A-Z]+)(f)/(?1:upper)(?2:tizf:notf)/g}
+// ${2/([A-z_0-9-]+) *(,)? */"$1\: " + $1 ?2: + "$2 " + :+ /g}
+		{ "trigger": "e\titalic emphasis", "contents": "*${1}*" },
+		{ "trigger": "se\tbold/strong emphasis", "contents": "**${1}**" },
+		{ "trigger": "lit, literal\tinline code", "contents": "``${1}``" },
+
+		{ "trigger": "list\tbulleted", "contents": "* ${1:text}\n* ${2}\n* ${3}" },
+		{ "trigger": "listn\tnumbered", "contents": "1. ${1}\n2. ${2}\n3. ${3}" },
+		{ "trigger": "listan\tauto num", "contents": "#. ${1}\n#. ${2}\n#. ${3}" },
+
+		{ "trigger": "def\tsingle definition", "contents": "${1:Bucket}${2: : noun (optional classifier)}\n    ${3:definition of a bucket}\n" },
+
+		{ "trigger": "source", "contents": "::\n\n    ${1:text}" },
+        // { "trigger": "code", "contents": ".. code-block:: ${1:language}\n\n    ${2:source}" },
+
+        { "trigger": "img\timage", "contents": ".. image:: ${1:path}\n\n$0" },
+        { "trigger": "imgc\tcentred-img", "contents": ".. image:: ${1:_data_local/}${2:/_data_global/}\n   :align: center\n   :width: 8cm\n   :alt: ${3:For Screen Readers}\n\n$0" },
+        { "trigger": "fig\figure", "contents": ".. figure:: ${1:path}\n\n   ${2:caption}\n\n$0" },
+        { "trigger": "figl\tfigure left", "contents": ".. figure:: ${1:_data_local/}${2:/_data_global/}\n   :align: left\n   :figwidth: 4cm\n   :width: 4cm\n   :alt: ${3:For Screen Readers}\n\n   ${4:Caption if reqd.}\n\n$0" },
+        { "trigger": "figr\tfigure right", "contents": ".. figure:: ${1:_data_local/}${2:/_data_global/}\n   :align: right\n   :figwidth: 4cm\n   :width: 4cm\n   :alt: ${3:For Screen Readers}\n\n   ${4:Caption if reqd.}\n\n$0" },
+        { "trigger": "figc\tfigure centre", "contents": ".. figure:: ${1:_data_local/}${2:/_data_global/}\n   :align: center\n   :width: 8cm\n   :alt: ${3:For Screen Readers}\n\n   ${4:Caption (if none consider an image::)}\n\n$0" },
+
+		// { "trigger": "table", "contents": "${1/./=/g}\n${1:heading}\n${1/./=/g}\n${2:row}\n${3:row}\n${4:row}\n${1/./=/g}" },
+		// { "trigger": "simpletable", "contents": "${1/./=/g}\n${1:heading}\n${1/./=/g}\n${2:row}\n${3:row}\n${4:row}\n${1/./=/g}" },
+        // { "trigger": "tabltx\tlatex table", "contents": ".. tabularcolumns:: |>{\\raggedright\\arraybackslash}\\Y{0.3}|>{\\centering\\arraybackslash}\\Y{0.2}|>{\\raggedleft\\arraybackslash}\\Y{0.4}|\n${2:\n******\nAbove is for latex. Change centering / raggedleft and right as reqd. also 0.4 / 0.2 page proportional widths.\nBelow is main table. Escape char is optional. Quoted cells optional. Widths are in proportion to each other, not page width.\nDelete this block when done.\n******\n}\n.. csv-table:: ${1:Table Caption}\n   :escape: '\n   :header: \"Treat\", \"Price\", \"Description\"\n   :align: center\n   :widths: 15, 10, 70\n\n   \"Albatross\", 2.99, \"On a stick! '\"ok'\"\"\n   Popcorn, 1.99, \"Straight from the oven\"\n\n$0" },
+
+		// { "trigger": "link", "contents": "`${1:link_variable_name}`_ $0\n\n.. _${1}: ${2:http://}"},
+		{ "trigger": "linki", "contents": "`${1:link_variable_name} <${2:http://}>`_ $0"},
+        // { "trigger": "hlink\thyperlink", "contents": "`${1:link text} <${0:http}>`_" },
+        { "trigger": "doclink\tlink to docname", "contents": ":doc:`${1:../moreinfo/mydoc}` $0" },
+        { "trigger": "doclinkn\tnamed doclink", "contents": ":doc:`${1:ref text} <${2:../moreinfo/mydoc}>` $0" },
+        { "trigger": "command\tcli cmd text", "contents": ":command:`${1:ls -la | grep sphinx}` $0" },
+        { "trigger": "contents\tlocal toc", "contents": ".. contents::\n   :local:\n\n" },
+        { "trigger": "keys\tkbd sequence", "contents": ":kbd:`${1:Control-x Control-f}` $0" },
+        { "trigger": "gui\tgui / menu label", "contents": ":guilabel:`${1:&Preferences}` $0" },
+        { "trigger": "menus\tmenu sequence", "contents": ":menuselection:`${1:Start --> &Programs}` $0" },
+        { "trigger": "file\tfile / dir name", "contents": ":file:`${1:filename}` $0" },
+        { "trigger": "download\tdownload link", "contents": ":download:`${1:file desc} <${2:../file.name}>` $0" },
+        { "trigger": "abbr\tabbreviation", "contents": ":abbr:`${1:UFO} (${2:Unidentified Flying Object})` $0" },
+        { "trigger": "rfc\trequest for comments", "contents": ":rfc:`${1:number#anchor}` $0" },
+        { "trigger": "foota\tautonum footnote", "contents": "[#]_ [[.. [#] ${1:footnote for pg bottom footnote rubric}]]" },
+        { "trigger": "footpg\tfootnote rubric", "contents": ".. rubric:: Footnotes\n\n${1:.. [#] Footnotes collected at bottom}" },
+        { "trigger": "cite\tcitation key", "contents": "[${1:Hughes-TP_1966}]_ " },
+        { "trigger": "blk-indx1s\tindex list", "contents": ".. index:: ${1:Main-Entry; subentry, and-normal-items, to put in index, comma separated, and point here}\n\n" },
+        { "trigger": "blk-indx\tindex cust blk", "contents": ".. index:: ! A-Main-Backreffed-Entry\n   single: A-Main; with-subentry\n   single: normal-entry\n   see: main-entry; see this-entry\n\n" },
+        { "trigger": "indx-inl-i\tinline indexed item", "contents": ":index:`${1:text of index item}`" },
+        { "trigger": "indx-inl-t\tinline indexed target", "contents": ":index:`${1:target text} <${2:Main entry opt; sub-entry}>`" },
+
+        { "trigger": "quote\tepigraph", "contents": ".. epigraph::\n\n   ${1:Any quote of a reasonable length can appear here. It's left aligned and unobtrusive. If you want something quoted, bolder and centred then use the pull-quote directive.}\n\n   -- ${2:author}\n\n$0" },
+        { "trigger": "sidebar\tright float", "contents": ".. sidebar:: ${1:Title}\n   :subtitle: ${2:Optional Sidebar Subtitle}\n\n   ${3:Body text of the sidebar. All the sidebar floats on a pale yellow background.}\n\n$0" },
+        { "trigger": "seealso\ttop seealso", "contents": ".. seealso::\n\n   ${1:Def List Title}\n      ${2:Don't need a def list. A para on the yellow is good too.}\n\n   ${3:Def List 2 Title}\n      ${4:Definition list 2 text}" },
+
+        // admonitions
+        { "trigger": "admonition\tgeneric admonition", "contents": ".. admonition:: ${1:title}\n\n   ${2:First para}\n\n$0" },
+        { "trigger": "attention\tadmonition", "contents": ".. attention:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "caution\tadmonition", "contents": ".. caution:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "danger\tadmonition", "contents": ".. danger:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "error\tadmonition", "contents": ".. error:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "hint\tadmonition", "contents": ".. hint:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "important\tadmonition", "contents": ".. important:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "note\tadmonition", "contents": ".. note:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "tip\tadmonition", "contents": ".. tip:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "warning\tadmonition", "contents": ".. warning:: ${1:note}\n\n   ${2:Second para if reqd}\n\n$0" },
+        { "trigger": "todo\ttodo-drctive", "contents": ".. todo:: $0" },
+
+        // author / page details - relies on pre-jinja parsing
+        { "trigger": "author_details\tpage details", "contents": "{{ insert_page_extra_details(page_extra_details, word_count) }}\n$0" },
+        
+        // sphinx-contrib-bibtex specific
+        // { "trigger": "bibpg\tpage bibliography", "contents": ".. rubric:: References\n\n.. bibliography:: /tphobe-zotsync.bib\n   :filter: docname in docnames\n$0" },
+        // { "trigger": "bibcited\tfull bibliography", "contents": ".. rubric:: References\n\n.. bibliography:: /tphobe-zotsync.bib\n   :cited:\n$0" },
+
+        // docutils special chars
+		// see http://docutils.sourceforge.net/docutils/parsers/rst/include/isoamsa.txt
+		{ "trigger": "rightarrow\tgraphics chars", "contents": " |srarr| $0" }, // rightwards arrow
+		{ "trigger": "rightdblarrow\tgraphics chars", "contents": " |xrArr| $0" },  // long rightwards double arrow
+
+        { "trigger": "reft\treference+title", "contents": ":ref:`${1:visible-reference-text} <${0:ref-loc-name}>`" },
+        { "trigger": "ref\treference-plain", "contents": ":ref:`${0:ref-loc-name}`" },
+        { "trigger": "refa\treference-anchor", "contents": ".. _${0:meaningful_ref_anchor}:" },
+        { "trigger": "tocl\tlocal-toc", "contents": ".. contents:: ${0:Table of Contents}\n   :local:\n\n" },
+        { "trigger": "litinc\tinclude-file-text", "contents": ".. literalinclude:: ./_static/${1:example.py}\n   :language: ${2:python/bash/rest}\n   :caption: Name Above\n   :linenos:\n   :lineno-match:\n   :lineno-start: 1\n   :emphasize-lines: 12,15-18\n   :lines: 1,3,5-10,20-\n   :start-after: string match\n   :end-before: string match\n\n" },
+        { "trigger": "term\tglossary-term-ref", "contents": ":term:`${1:term-or-desc}<${2:term-if-desc}>` $0" },
+        { "trigger": "title\thtml-title", "contents": ".. title:: ${1:html title instead of first h1 copy e.g. Home}\n\n$0"}
+	]
+}

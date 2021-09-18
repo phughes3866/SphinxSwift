@@ -1,0 +1,92 @@
+import re, os
+import sublime, sublime_plugin
+from . import py_parser
+
+_ST3 = sublime.version() >= "3000"
+
+url = "http://localhost:23119/better-bibtex/cayw"
+
+if _ST3:
+    from urllib import request
+
+    def request_key():
+        try:
+            res = request.urlopen(url)
+        except:
+            sublime.status_message("Zotero Bibtex Plugin Not Responding. Is Zotero open?")
+            return ""
+        rtncode = res.getcode()
+        # if not rtncode == 200
+        return res.read().decode()
+else:
+    import urllib2
+    req = urllib2.Request(url)
+
+    def request_key():
+        return urllib2.urlopen(req).read()
+
+
+def get_refs_from_file(filename):
+    # opens file with std rst refs and parses it into 2 dicts
+    # pattern for matching ".. [author_yr] Author, 1966 Great Book"
+    pattern = re.compile(r"""
+        ^\.\.\s+\[
+        (?P<cit>.*?)\]\s+
+        (?P<ref>.*)$
+        """, re.VERBOSE | re.MULTILINE)
+    with open(filename, 'r') as reffile:
+        # Read file object to string
+        text = reffile.read()
+    # for match in pattern.finditer(text):
+    #     return match.group(1)
+    found = re.findall(pattern, text)
+    if found:
+        return dict(found)
+    return None
+
+class InsertZoteroCitationCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        # invoke the url and get a response
+        # extract citation from response
+        cite_key = request_key()
+        if cite_key:
+            cite_key = ":cite:`{}` ".format(cite_key)
+            self.view.insert(edit, self.view.sel()[0].b, cite_key)
+
+class CiteFromReferenceFileCommand(sublime_plugin.TextCommand):
+    def on_done(self, index):
+        if index == -1:
+            # noop; nothing was selected 
+            # e.g. the user pressed escape
+            return 
+
+        # sublime.message_dialog(selected_value)
+        self.view.run_command(
+                    "insert_my_text", {"args":
+                    {'text': self.insert_list[index]}})
+    def run(self, edit):
+        # reads file bib_references.rst from root of project
+        # presents a list of references from that file
+        # inserts citation for selected reference
+        self.insert_list = []
+        self.display_list = []
+        variables = self.view.window().extract_variables ()
+        ref_filename = "bib_references.rst"
+        ref_file = os.path.join(variables["folder"], ref_filename)
+        if not os.path.isfile(ref_file):
+            sublime.status_message("No reference file: {}".format(ref_file))
+        else:
+            parse_result = get_refs_from_file(ref_file)
+            if not parse_result:
+                sublime.status_message("No references found in {}".format(ref_filename))
+            else:
+                for cit, ref in parse_result.items():
+                    self.insert_list.append("[{}]_ ".format(cit))
+                    self.display_list.append("[{}] = {}".format(cit, ref))
+                sublime.status_message("{} references found".format(len(parse_result)))
+                sublime.active_window().show_quick_panel(
+                    self.display_list, 
+                    self.on_done
+                )
+                # self.view.insert(edit, self.view.sel()[0].b, parse_result)
+

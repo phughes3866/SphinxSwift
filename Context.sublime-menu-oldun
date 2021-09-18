@@ -1,0 +1,14 @@
+[
+{
+	"id" : "phContextMenu",
+	"caption": "Sphinx Swift",
+	"children":
+	[
+	{
+		"caption" : "Insert DateTime",
+		"command" : "insert_datetime", 
+		"mnemonic" : "D"
+	}
+	]
+}
+]
