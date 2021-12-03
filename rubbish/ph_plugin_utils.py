@@ -204,22 +204,25 @@ def get_rst_replace_dict(parsestr):
 #
 #****************************************************************************
 
-def get_intersphinx_mapping():
-    """
-    Finds the file in which intersphinx_mapping is defined (same one as used by intersphinx itself)
-    imports this file as a module and then returns the resultant intersphinx_mapping dictionary
-    """
-    settings = get_plugin_settings("sphinx-swift.sublime-settings", sphinx_swift_settings_file_variables, True)
-    print(settings)
-    inv_map_source = settings.get("intersphinx_map_file", "")
-    if not inv_map_source:
-        sublime.error_message("Unable to find [intersphinx_map_file] setting in sphinx-swift.sublime-settings")
-        return
-    the_path, the_file = os.path.split(inv_map_source)
-    sys.path.append(the_path)
-    # import the file without the .py extension name according to import syntax
-    mapmod = __import__(os.path.splitext(the_file)[0])
-    return mapmod.intersphinx_mapping
+# def get_intersphinx_mapping():
+#     """
+#     Finds the file in which intersphinx_mapping is defined (same one as used by intersphinx itself)
+#     imports this file as a module and then returns the resultant intersphinx_mapping dictionary
+#     !!! can't we just find 'conf.py' in the project's base directory, parse it to find [intersphinx_map_file] ???
+#     """
+#     settings = get_plugin_settings("sphinx-swift.sublime-settings", sphinx_swift_settings_file_variables, True)
+#     print('these settings {}'.format(settings))
+#     inv_map_source = settings.get("intersphinx_map_file", "")
+#     print('inv map source= {}'.format(inv_map_source))
+#     if not inv_map_source:
+#         sublime.error_message("Unable to find [intersphinx_map_file] setting in sphinx-swift.sublime-settings")
+#         return
+#     the_path, the_file = os.path.split(inv_map_source)
+#     print("PATH:{} FILE:{}".format(the_path, the_file))
+#     sys.path.append(the_path)
+#     # import the file without the .py extension name according to import syntax
+#     mapmod = __import__(os.path.splitext(the_file)[0])
+#     return mapmod.intersphinx_mapping
 
 def get_intersphinx_label(is_map, cur_project_dir):
     """
@@ -236,16 +239,16 @@ def get_intersphinx_label(is_map, cur_project_dir):
                     return shortname
     return None
 
-def get_objinv_from_intersphinx_map(the_map, the_key, normalising_path):
+def get_objinv_from_intersphinx_map(the_map, the_key):
     """
-    Return a fully qualified filename string for the first existing filename found in the_key section of the_map (intersphinx_mapping)
-    Return None if no existing files are found 
+    Return a filename string for the first existing 'objects.inv' found in the_key section of the_map (intersphinx_mapping)
+    These filenames are now absolute in intersphinx_mapping
+    Display an error and Return None if no existing files are found 
     """
     for filestr in the_map[the_key][1]:
-        # print("filestr: {}".format(filestr))
-        objects_inv_fileloc = os.path.normpath(os.path.join(normalising_path, filestr))
-        if os.path.exists(objects_inv_fileloc):
-            return objects_inv_fileloc
+        if os.path.exists(filestr):
+            return filestr
+    sublime.error_message("[key={}] - cannot locate an 'objects.inv' file in the intersphinx_mapping.".format(the_key))
     return None  
 
 
@@ -255,7 +258,37 @@ def get_objinv_from_intersphinx_map(the_map, the_key, normalising_path):
 # These were borrowed from the intersphinx sphinx plugin, and slightly modified
 #
 # ************************************************************
-def read_inventory_v2(f, section_name="", is_prefix="", for_cur_project=False, bufsize=16*1024):
+
+
+                    # # NOTE: The following (from intersphinx) may be useful for reading object.inv files from the net (and files?)
+                    # from sphinx.ext import intersphinx
+                    # import warnings
+
+
+                    # def fetch_inventory(uri):
+                    #     """Read a Sphinx inventory file into a dictionary."""
+                    #     class MockConfig(object):
+                    #         intersphinx_timeout = None  # type: int
+                    #         tls_verify = False
+
+                    #     class MockApp(object):
+                    #         srcdir = ''
+                    #         config = MockConfig()
+
+                    #         def warn(self, msg):
+                    #             warnings.warn(msg)
+
+                    #     return intersphinx.fetch_inventory(MockApp(), '', uri)
+
+
+                    # uri = 'http://docs.python.org/2.7/objects.inv'
+
+                    # # Read inventory into a dictionary
+                    # inv = fetch_inventory(uri)
+                    # # Or just print it
+                    # intersphinx.debug(['', uri])
+
+def read_inventory_v2(f, section_name="", display_prefix="", for_cur_project=False, bufsize=16*1024):
     invdata = {}
     datalist = []
     displaylist = []
@@ -285,11 +318,11 @@ def read_inventory_v2(f, section_name="", is_prefix="", for_cur_project=False, b
         assert not buf
 
     # main
-    is_prefix_plus_colon = is_prefix + ":"
-    if is_prefix or for_cur_project: # we're collecting label and doc entries for cross project references
-        section_name = ""
-        if for_cur_project:
-            is_prefix_plus_colon = ""
+    shaped_prefix = display_prefix + ":"
+    # if display_prefix or for_cur_project: # we're collecting label and doc entries for cross project references
+    #     section_name = ""
+    #     if for_cur_project:
+    #         shaped_prefix = ""
 
     for line in split_lines(read_chunks()):
         # be careful to handle names with embedded spaces correctly
@@ -297,9 +330,9 @@ def read_inventory_v2(f, section_name="", is_prefix="", for_cur_project=False, b
                      line.rstrip())
         if not m:
             continue
-        name, type, prio, location, dispname = m.groups()
-        if type == 'py:module' and type in invdata and \
-            name in invdata[type]:  # due to a bug in 1.1 and below,
+        name, entrytype, prio, location, dispname = m.groups()
+        if entrytype == 'py:module' and entrytype in invdata and \
+            name in invdata[entrytype]:  # due to a bug in 1.1 and below,
                                     # two inventory entries are created
                                     # for Python modules, and the first
                                     # one is correct
@@ -312,10 +345,10 @@ def read_inventory_v2(f, section_name="", is_prefix="", for_cur_project=False, b
         if dispname == "-":
             dispname = name
 
-        invdata.setdefault(type, {})[name] = (projname, version,
+        invdata.setdefault(entrytype, {})[name] = (projname, version,
                                               location, dispname)
         if section_name: # a section_name has been supplied for a local proj. search
-            if type == "std:{}".format(section_name):
+            if entrytype == "std:{}".format(section_name):
                 if section_name == "label":
                     datalist.append(":ref:`${{1:{}}}` ".format(name))
                     displaylist.append("ref: {} ({})".format(dispname, name))
@@ -326,19 +359,19 @@ def read_inventory_v2(f, section_name="", is_prefix="", for_cur_project=False, b
                     datalist.append(":term:`${{1:{}}}` ".format(name))
                     displaylist.append("term: {} ({})".format(dispname, name))
         else: # this is part of a project group scan (intersphinx based), collect label(ref) and doc references
-            bare_type = type[4:] # strip 'std:'
-            if bare_type == "label":
-                datalist += [":ref:`${{1:{}{}}}` ".format(is_prefix_plus_colon, name)]
-                displaylist += ["{}ref: {} ({})".format(is_prefix_plus_colon, dispname, name)]
-            if bare_type == "doc":
-                datalist += [":doc:`${{1:{}{}}}` ".format(is_prefix_plus_colon, name)]
-                displaylist += ["{}doc: {} ({})".format(is_prefix_plus_colon, dispname, name)]
+            bare_entrytype = entrytype[4:] # strip 'std:'
+            if bare_entrytype == "label":
+                datalist += [":ref:`${{1:{}{}}}` ".format(shaped_prefix, name)]
+                displaylist += ["{}ref: {} ({})".format(shaped_prefix, dispname, name)]
+            if bare_entrytype == "doc":
+                datalist += [":doc:`${{1:{}{}}}` ".format(shaped_prefix, name)]
+                displaylist += ["{}doc: {} ({})".format(shaped_prefix, dispname, name)]
 
 
     # return invdata
     return datalist, displaylist
 
-def fetch_inv_lists(invloc, section_name="", is_prefix="", for_cur_project=False):
+def fetch_inv_lists(invloc, section_name="", display_prefix="", for_cur_project=False):
     """
     Parse a sphinx objects.inv file on the local filesystem at invloc
     return 2 x lists with data/display entries for the identified section of objects.inv
@@ -354,7 +387,7 @@ def fetch_inv_lists(invloc, section_name="", is_prefix="", for_cur_project=False
             # if line == '# Sphinx inventory version 1':
             #     invdata = read_inventory_v1(f, uri, join)
             if line == '# Sphinx inventory version 2':
-                datalist, displaylist = read_inventory_v2(f, section_name, is_prefix, for_cur_project)
+                datalist, displaylist = read_inventory_v2(f, section_name, display_prefix, for_cur_project)
             else:
                 raise ValueError
             f.close()

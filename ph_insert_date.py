@@ -1,7 +1,8 @@
 import sublime, sublime_plugin, re, os, sys
 from datetime import datetime
 
-site_paths=['/usr/lib/python3.5', '/usr/local/lib/python3.7/dist-packages', '/usr/lib/python3.5/plat-x86_64-linux-gnu', '/usr/lib/python3.5/lib-dynload', '/home/key/.local/lib/python3.5/site-packages', '/usr/local/lib/python3.5/dist-packages', '/usr/lib/python3/dist-packages']
+site_paths=['/usr/lib/python3.9', '/usr/local/lib/python3.9/dist-packages', '/usr/lib/python3.9/lib-dynload', '/usr/lib/python3/dist-packages']
+# site_paths=['/usr/lib/python3.9', '/usr/local/lib/python3.9/dist-packages', '/usr/lib/python3.9/lib-dynload', '/home/paul/.local/lib/python3.7/site-packages', '/usr/local/lib/python3.7/dist-packages', '/usr/lib/python3/dist-packages']
 # site_paths=['/usr/lib/python35.zip', '/usr/lib/python3.5', '/usr/lib/python3.5/plat-x86_64-linux-gnu', '/usr/lib/python3.5/lib-dynload', '/home/key/.local/lib/python3.5/site-packages', '/usr/local/lib/python3.5/dist-packages', '/usr/lib/python3/dist-packages']
 for this_path in site_paths:
     if this_path not in sys.path:

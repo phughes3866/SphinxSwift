@@ -5,7 +5,7 @@
     //        "command_path": [ "/usr/local/bin", "/opt/pandoc/bin" ]
     "command_path": [],
     // The bibliography file to consult for citation lookups
-    "bib_ref_file": "",
+    "bib_ref_file": "../commondata/tpsuite_bibliography.rst",
     // Sometimes it is useful to have extra sphinx conf.py files e.g. shared config amongst multiple projects
     // This setting lets sphinx-swift locate these files if they exist
     // N.B. Extra conf files can be read by sphinx itself by putting something like the following line in the standard conf.py
@@ -13,5 +13,5 @@
     "extra_sphinx_conf_files": [],
     // The intersphinx_map_file varible points to a python file in which the intersphinx_mapping dict is defined
     // This file must be leveraged out of a sphinx conf.py file, perhaps put in a shared location if shared across multiple projects
-    "intersphinx_map_file": "/media/locserve/biglib/Sphinx/commondata/intersphinx_map.py"
+    "intersphinx_map_file": "/home/paul/Shares/SphinxProjects/commondata/intersphinx_map.py"
 }

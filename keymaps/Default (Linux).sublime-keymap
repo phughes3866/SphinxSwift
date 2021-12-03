@@ -68,16 +68,16 @@
             { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
           ]
     }, {
-        "keys": ["ctrl+alt+i"], "command": "emphasis", "context":
-          [
-            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
-          ]
-    }, {
-        "keys": ["ctrl+alt+k"], "command": "literal", "context":
-          [
-            { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
-          ]
-    }, {
+    //     "keys": ["ctrl+alt+i"], "command": "emphasis", "context":
+    //       [
+    //         { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+    //       ]
+    // }, {
+    //     "keys": ["ctrl+alt+k"], "command": "literal", "context":
+    //       [
+    //         { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
+    //       ]
+    // }, {
         "keys": ["ctrl+t", "enter"], "command": "table", "context":
           [
             { "key": "selector", "operator": "equal", "operand": "text.restructuredtext" }
